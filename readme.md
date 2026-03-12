@@ -1,0 +1,2 @@
+Core backend classes: TradeOrder.java, PriceComparator.java, StockExchange.java, Stock.java, Brokerage.java, Trader.java
+Test classes: MyTests_TradeOrder.java, MyTests_PriceComparator.java, MyTests_StockExchange.java, MyTests_Stock.java, MyTests_Brokerage.java (all have // TODO write tests)
