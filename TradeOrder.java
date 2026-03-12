@@ -14,7 +14,60 @@ public class TradeOrder
     private double price;
 
     // TODO complete class
+    public TradeOrder(Trader trader, String symbol, boolean buyOrder, 
+        boolean marketOrder, int numShares, double price) {
+        this.trader = trader;
+        this.symbol = symbol;
+        this.buyOrder = buyOrder;
+        this.marketOrder = marketOrder;
+        this.numShares = numShares;
+        this.price = price;
+    }
 
+    public double getPrice() {
+        return this.price;
+    }
+
+    public int getShares() {
+        return numShares;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public Trader getTrader() {
+        return trader;
+    }
+
+    public boolean isBuy() {
+        return buyOrder;
+    }
+
+    public boolean isLimit() {
+        return !marketOrder;
+    }
+
+    public boolean isMarket() {
+        return marketOrder;
+    }
+
+    public boolean isSell() {
+        if (!buyOrder) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void subtractShares(int shares) {
+        if (this.numShares < shares) {
+            throw new IllegalArgumentException();
+        } else {
+            this.numShares = this.numShares - shares;
+        }
+    }
+    
     //
     // The following are for test purposes only
     //
