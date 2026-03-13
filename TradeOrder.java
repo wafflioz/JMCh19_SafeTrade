@@ -14,6 +14,7 @@ public class TradeOrder
     private double price;
 
     // TODO complete class
+
     public TradeOrder(Trader trader, String symbol, boolean buyOrder, 
         boolean marketOrder, int numShares, double price) {
         this.trader = trader;
@@ -53,11 +54,7 @@ public class TradeOrder
     }
 
     public boolean isSell() {
-        if (!buyOrder) {
-            return true;
-        } else {
-            return false;
-        }
+        return !buyOrder;
     }
 
     public void subtractShares(int shares) {
@@ -67,7 +64,7 @@ public class TradeOrder
             this.numShares = this.numShares - shares;
         }
     }
-    
+
     //
     // The following are for test purposes only
     //
@@ -105,3 +102,4 @@ public class TradeOrder
         return str + "]";
     }
 }
+
