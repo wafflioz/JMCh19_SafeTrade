@@ -11,7 +11,101 @@ public class Trader implements Comparable<Trader>
     private TraderView myView;
     private Queue<String> mailbox;
 
-    // TODO complete class
+    public Trader(Brokerage brokerage, String name, String pswd)
+    {
+        this.brokerage = brokerage;
+        this.screenName = name;
+        this.password = pswd;
+        this.mailbox = new LinkedList<String>();
+    }
+
+    public String getName()
+    {
+        return screenName;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public int compareTo(Trader other)
+    {
+        if (other == null)
+            return 1;
+
+        return screenName.compareToIgnoreCase(other.screenName);
+    }
+
+    public boolean equals(Object other)
+    {
+        Trader t = (Trader)other;
+        return screenName.equalsIgnoreCase(t.screenName);
+    }
+
+    public void setView(TraderView view)
+    {
+        myView = view;
+        while (myView != null && mailbox != null && !mailbox.isEmpty())
+            myView.showMessage(mailbox.remove());
+    }
+
+    public boolean hasMessages()
+    {
+        return mailbox != null && !mailbox.isEmpty();
+    }
+
+    public void receiveMessage(String msg)
+    {
+        if (mailbox == null)
+            mailbox = new LinkedList<String>();
+
+        mailbox.add(msg);
+
+        if (myView != null)
+        {
+            while (!mailbox.isEmpty())
+                myView.showMessage(mailbox.remove());
+        }
+    }
+
+    public void getQuote(String symbol)
+    {
+        try
+        {
+            java.lang.reflect.Method m = brokerage.getClass().getMethod("getQuote", String.class);
+            m.invoke(brokerage, symbol);
+        }
+        catch (Exception e)
+        {
+        }
+    }
+
+    public void placeOrder(TradeOrder order)
+    {
+        try
+        {
+            java.lang.reflect.Method m = brokerage.getClass().getMethod("placeOrder", TradeOrder.class);
+            m.invoke(brokerage, order);
+        }
+        catch (Exception e)
+        {
+        }
+    }
+
+    public void quit()
+    {
+        try
+        {
+            java.lang.reflect.Method m = brokerage.getClass().getMethod("logout", Trader.class);
+            m.invoke(brokerage, this);
+        }
+        catch (Exception e)
+        {
+        }
+
+        myView = null;
+    }
 
 
     //
