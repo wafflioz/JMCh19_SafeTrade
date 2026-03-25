@@ -12,6 +12,46 @@ public class Brokerage implements Login
 
     // TODO complete class
 
+    public Brokerage(StockExchange exchange){
+        this.exchange = exchange;
+        traders = new TreeMap<String, Trader>();
+        loggedTraders = new TreeSet<Trader>();
+    }
+
+    public int addUser(String name, String password){
+        if(name.length()<4 || name.length()>10) return -1;
+        if(password.length()<2 || password.length()>10) return -2;
+        if(traders.containsKey(name)) return -3;
+
+        Trader newTrader = new Trader(this, name, password);
+        traders.put(name, newTrader);
+        return 0;
+    }
+
+    public int login(String name, String password){
+        if(!traders.containsKey(name)) return -1;
+        Trader trader = traders.get(name);
+
+        if(!trader.getPassword().equals(password)) return -2;
+        if(loggedTraders.contains(trader)) return -3;
+        loggedTraders.add(trader);
+
+        if(!trader.hasMessages()) trader.receiveMessage("Welcome to SafeTrade!");
+
+        return 0;
+    }
+
+    public void logout(Trader trader){
+        if(loggedTraders.contains(trader)) loggedTraders.remove(trader);
+    }
+
+    public void getQuote(String symbol, Trader trader){
+        String quote = exchange.getQuote(symbol);
+        trader.receiveMessage(quote);
+    }
+
+    public void placeOrder(TradeOrder order){exchange.placeOrder(order);}
+
     
     //
     // The following are for test purposes only

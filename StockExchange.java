@@ -13,7 +13,25 @@ public class StockExchange
     
     // TODO complete class
 
-    
+    public StockExchange(){
+        listedStocks = new HashMap<String, Stock>();
+    }
+
+    public String getQuote(String symbol){
+        if(!listedStocks.containsKey(symbol)) return symbol + " not found";
+        return listedStocks.get(symbol).getQuote();
+    }
+
+    public void listStock(String symbol, String name, double price){
+        Stock newStock = new Stock(symbol, name, price);
+        listedStocks.put(symbol, newStock);
+    }
+
+    public void placeOrder(TradeOrder order){
+        String symbol = order.getSymbol();
+        Stock stock = listedStocks.get(symbol);
+        if(stock!=null) stock.placeOrder(order);
+    }
     //
     // The following are for test purposes only
     //
