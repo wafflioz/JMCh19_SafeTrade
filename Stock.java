@@ -61,7 +61,7 @@ public class Stock
             sellOrders.add(order);
         }
         String orderMsg = "New order:  " + (order.isBuy() ? "Buy" : "Sell") + " " + stockSymbol + " (" + companyName + ")\n" + order.getShares() + " shares at " + (order.isMarket() ? "market" : money.format(order.getPrice()));
-        order.getTrader().receiveMessage(orderMsg);
+        if (order.getTrader() != null) order.getTrader().receiveMessage(orderMsg);
         executeOrders();
     }
 
