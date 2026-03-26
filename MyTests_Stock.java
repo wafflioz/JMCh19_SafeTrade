@@ -30,6 +30,30 @@ public class MyTests_Stock {
         System.out.println("\nRunning testStockConstructor...");
         Stock stock = new Stock(symbol, name, price);
         System.out.println(stock.toString());
+
+        System.out.println("Expected symbol: " + symbol);
+        System.out.println("Actual symbol: " + stock.getStockSymbol());
+
+        System.out.println("Expected name: " + name);
+        System.out.println("Actual name: " + stock.getCompanyName());
+
+        System.out.println("Expected lastPrice: " + price);
+        System.out.println("Actual lastPrice: " + stock.getLastPrice());
+
+        System.out.println("Expected loPrice: " + price);
+        System.out.println("Actual loPrice: " + stock.getLoPrice());
+
+        System.out.println("Expected hiPrice: " + price);
+        System.out.println("Actual hiPrice: " + stock.getHiPrice());
+
+        System.out.println("Expected volume: 0");
+        System.out.println("Actual volume: " + stock.getVolume());
+
+        System.out.println("Expected buyOrders empty: true");
+        System.out.println("Actual buyOrders empty: " + stock.getBuyOrders().isEmpty());
+
+        System.out.println("Expected sellOrders empty: true");
+        System.out.println("Actual sellOrders empty: " + stock.getSellOrders().isEmpty());
     }
 
     private static void testStockGetQuote() {
@@ -38,6 +62,9 @@ public class MyTests_Stock {
 
     private static void testStockPlaceOrder() {
         System.out.println("\nRunning testStockPlaceOrder...");
+        Stock stock = new Stock(symbol, name, price);
+        
+        TradeOrder buyOrder = new TradeOrder(null, symbol, true, false, 100, 10);
     }
 
     private static void testStockExecuteOrders() {
