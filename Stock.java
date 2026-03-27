@@ -61,7 +61,10 @@ public class Stock
             sellOrders.add(order);
         }
         String orderMsg = "New order:  " + (order.isBuy() ? "Buy" : "Sell") + " " + stockSymbol + " (" + companyName + ")\n" + order.getShares() + " shares at " + (order.isMarket() ? "market" : money.format(order.getPrice()));
-        if (order.getTrader() != null) order.getTrader().receiveMessage(orderMsg);
+        
+        if (order.getTrader() != null) {
+            order.getTrader().receiveMessage(orderMsg);
+        }
         executeOrders();
     }
 
@@ -99,8 +102,12 @@ public class Stock
             volume += sharesToTrade;
             String buyMsg = "You bought: " + sharesToTrade + " " + stockSymbol + " at " + money.format(execPrice) + " amt " + money.format(execPrice * sharesToTrade);
             String sellMsg = "You sold: " + sharesToTrade + " " + stockSymbol + " at " + money.format(execPrice) + " amt " + money.format(execPrice * sharesToTrade);
-            buy.getTrader().receiveMessage(buyMsg);
-            sell.getTrader().receiveMessage(sellMsg);
+            if (buy.getTrader() != null) {
+                buy.getTrader().receiveMessage(buyMsg);
+            }
+            if (sell.getTrader() != null) {
+                sell.getTrader().receiveMessage(sellMsg);
+            }
         }
     }
     //
