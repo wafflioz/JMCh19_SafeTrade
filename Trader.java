@@ -37,6 +37,10 @@ public class Trader implements Comparable<Trader>
         return screenName.compareToIgnoreCase(other.screenName);
     }
 
+    public int hashCode() {
+        return screenName.toLowerCase().hashCode();
+    }
+
     public boolean equals(Object other)
     {
         Trader t = (Trader)other;
@@ -73,7 +77,7 @@ public class Trader implements Comparable<Trader>
     {
         try
         {
-            java.lang.reflect.Method m = brokerage.getClass().getMethod("getQuote", String.class);
+            java.lang.reflect.Method m = brokerage.getClass().getMethod("getQuote", String.class, Trader.class);
             m.invoke(brokerage, symbol);
         }
         catch (Exception e)
