@@ -78,7 +78,7 @@ public class Trader implements Comparable<Trader>
         try
         {
             java.lang.reflect.Method m = brokerage.getClass().getMethod("getQuote", String.class, Trader.class);
-            m.invoke(brokerage, symbol);
+            m.invoke(brokerage, symbol, this);
         }
         catch (Exception e)
         {

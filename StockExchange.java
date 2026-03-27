@@ -30,7 +30,11 @@ public class StockExchange
     public void placeOrder(TradeOrder order){
         String symbol = order.getSymbol();
         Stock stock = listedStocks.get(symbol);
-        if(stock!=null) stock.placeOrder(order);
+        if(stock != null) {
+            stock.placeOrder(order);
+        } else if(order != null && order.getTrader() != null){
+            order.getTrader().receiveMessage(symbol + " not found");
+        }
     }
     //
     // The following are for test purposes only
