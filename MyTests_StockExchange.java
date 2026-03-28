@@ -13,6 +13,8 @@ public class MyTests_StockExchange {
         testPlaceOrderInvalidStock();
         testMultipleStocks();
         testPlaceOrderWithMessage();
+        testStockExchangeToString();
+        testPlaceOrderNullTraderInvalidStock();
     }
     
     private static void testStockExchangeConstructor() {
@@ -132,5 +134,26 @@ public class MyTests_StockExchange {
                            quote2.contains("Microsoft") && 
                            quote3.contains("Apple");
         System.out.println("Test passed: " + allCorrect);
+    }
+
+    private static void testStockExchangeToString() {
+        System.out.println("\nRunning testStockExchangeToString...");
+        StockExchange exchange = new StockExchange();
+        exchange.listStock("GGGL", "Giggle.com", 10.00);
+        
+        String str = exchange.toString();
+        System.out.println("StockExchange toString: " + str);
+        System.out.println("Contains class name: " + str.contains("StockExchange"));
+    }
+
+    private static void testPlaceOrderNullTraderInvalidStock() {
+        System.out.println("\nRunning testPlaceOrderNullTraderInvalidStock...");
+        StockExchange exchange = new StockExchange();
+        
+        TradeOrder orderWithoutTrader = new TradeOrder(null, "NOTFOUND", true, false, 50, 15.00);
+        exchange.placeOrder(orderWithoutTrader);
+        
+        System.out.println("Order with null trader placed for non-existent stock");
+        System.out.println("Test passed: true (no exception thrown)");
     }
 }

@@ -23,6 +23,14 @@ public class MyTests_Stock {
         testStockGetVolume();
         testStockGetBuyOrders();
         testStockGetSellOrders();
+        testStockGetQuoteWithLimitBidAsk();
+        testStockGetQuoteWithMarketBidAsk();
+        testStockExecuteOrdersLimitVsMarket();
+        testStockExecuteOrdersBothMarket();
+        testStockExecuteOrdersBuyMarketSellLimit();
+        testStockExecuteOrdersBuyLimitSellMarket();
+        testStockToString();
+        testStockPlaceOrderWithTrader();
 
     }
 
@@ -159,5 +167,117 @@ public class MyTests_Stock {
         stock.placeOrder(sell);
         System.out.println("Expected sellOrders size after 1 order: 1");
         System.out.println("Actual sellOrders size after 1 order: " + stock.getSellOrders().size());
+    }
+
+    private static void testStockGetQuoteWithLimitBidAsk() {
+        System.out.println("\nRunning testStockGetQuoteWithLimitBidAsk...");
+        Stock stock = new Stock(symbol, name, price);
+        
+        TradeOrder limitBuy = new TradeOrder(null, symbol, true, false, 50, 11.50);
+        TradeOrder limitSell = new TradeOrder(null, symbol, false, false, 50, 12.50);
+        
+        stock.placeOrder(limitBuy);
+        stock.placeOrder(limitSell);
+        
+        String quote = stock.getQuote();
+        System.out.println("Quote with limit orders: " + quote);
+        System.out.println("Contains bid price: " + quote.contains("11.50"));
+        System.out.println("Contains ask price: " + quote.contains("12.50"));
+    }
+
+    private static void testStockGetQuoteWithMarketBidAsk() {
+        System.out.println("\nRunning testStockGetQuoteWithMarketBidAsk...");
+        Stock stock = new Stock(symbol, name, price);
+        
+        TradeOrder marketBuy = new TradeOrder(null, symbol, true, true, 50, 0);
+        TradeOrder marketSell = new TradeOrder(null, symbol, false, true, 50, 0);
+        
+        stock.placeOrder(marketBuy);
+        stock.placeOrder(marketSell);
+        
+        String quote = stock.getQuote();
+        System.out.println("Quote with market orders: " + quote);
+        System.out.println("Contains market: " + quote.contains("market"));
+        System.out.println("Contains size: " + quote.contains("size"));
+    }
+
+    private static void testStockExecuteOrdersLimitVsMarket() {
+        System.out.println("\nRunning testStockExecuteOrdersLimitVsMarket...");
+        Stock stock = new Stock(symbol, name, price);
+        
+        TradeOrder limitBuy = new TradeOrder(null, symbol, true, false, 75, 11.00);
+        TradeOrder marketSell = new TradeOrder(null, symbol, false, true, 50, 0);
+        
+        stock.placeOrder(limitBuy);
+        stock.placeOrder(marketSell);
+        
+        System.out.println("Volume after mixed order: " + stock.getVolume());
+        System.out.println("Last price (should be 11.00): " + stock.getLastPrice());
+    }
+
+    private static void testStockExecuteOrdersBothMarket() {
+        System.out.println("\nRunning testStockExecuteOrdersBothMarket...");
+        Stock stock = new Stock("TEST", "Test Corp", 15.00);
+        
+        TradeOrder marketBuy = new TradeOrder(null, "TEST", true, true, 100, 0);
+        TradeOrder marketSell = new TradeOrder(null, "TEST", false, true, 100, 0);
+        
+        stock.placeOrder(marketBuy);
+        stock.placeOrder(marketSell);
+        
+        System.out.println("Volume after both market: " + stock.getVolume());
+        System.out.println("Last price (should be 15.00): " + stock.getLastPrice());
+    }
+
+    private static void testStockExecuteOrdersBuyMarketSellLimit() {
+        System.out.println("\nRunning testStockExecuteOrdersBuyMarketSellLimit...");
+        Stock stock = new Stock("ABC", "ABC Corp", 20.00);
+        
+        TradeOrder marketBuy = new TradeOrder(null, "ABC", true, true, 60, 0);
+        TradeOrder limitSell = new TradeOrder(null, "ABC", false, false, 60, 19.50);
+        
+        stock.placeOrder(marketBuy);
+        stock.placeOrder(limitSell);
+        
+        System.out.println("Volume: " + stock.getVolume());
+        System.out.println("Last price (should be 19.50): " + stock.getLastPrice());
+    }
+
+    private static void testStockExecuteOrdersBuyLimitSellMarket() {
+        System.out.println("\nRunning testStockExecuteOrdersBuyLimitSellMarket...");
+        Stock stock = new Stock("XYZ", "XYZ Inc", 25.00);
+        
+        TradeOrder limitBuy = new TradeOrder(null, "XYZ", true, false, 80, 25.75);
+        TradeOrder marketSell = new TradeOrder(null, "XYZ", false, true, 80, 0);
+        
+        stock.placeOrder(limitBuy);
+        stock.placeOrder(marketSell);
+        
+        System.out.println("Volume: " + stock.getVolume());
+        System.out.println("Last price (should be 25.75): " + stock.getLastPrice());
+    }
+
+    private static void testStockToString() {
+        System.out.println("\nRunning testStockToString...");
+        Stock stock = new Stock(symbol, name, price);
+        String str = stock.toString();
+        System.out.println("Stock toString: " + str);
+        System.out.println("Contains class name: " + str.contains("Stock"));
+    }
+
+    private static void testStockPlaceOrderWithTrader() {
+        System.out.println("\nRunning testStockPlaceOrderWithTrader...");
+        StockExchange exchange = new StockExchange();
+        Brokerage brokerage = new Brokerage(exchange);
+        Stock stock = new Stock("PLYR", "Player Corp", 50.00);
+        
+        brokerage.addUser("player1", "pass789");
+        Trader trader = brokerage.getTraders().get("player1");
+        
+        TradeOrder order = new TradeOrder(trader, "PLYR", true, false, 100, 50.50);
+        stock.placeOrder(order);
+        
+        System.out.println("Trader received order message: " + trader.hasMessages());
+        System.out.println("Buy orders in stock: " + stock.getBuyOrders().size());
     }
 }

@@ -11,6 +11,7 @@ public class MyTests_Brokerage {
         testAddUserInvalidPassword();
         testAddUserDuplicateName();
         testLoginValid();
+        testLoginWithExistingMessages();
         testLoginUserNotFound();
         testLoginInvalidPassword();
         testLoginAlreadyLoggedIn();
@@ -19,6 +20,8 @@ public class MyTests_Brokerage {
         testPlaceOrder();
         testMultipleUsers();
         testLogoutNotLoggedIn();
+        testBrokerageToString();
+        testGetExchange();
     }
     
     private static void testBrokerageConstructor() {
@@ -105,7 +108,7 @@ public class MyTests_Brokerage {
         Brokerage brokerage = new Brokerage(exchange);
         
         brokerage.addUser("trader1", "pass123");
-        int result = brokerage.addUser("trader1", "differentpass");
+        int result = brokerage.addUser("trader1", "pass456");
         
         System.out.println("Expected return for duplicate name: -3");
         System.out.println("Actual return: " + result);
@@ -134,6 +137,26 @@ public class MyTests_Brokerage {
         
         boolean passed = result == 0 && brokerage.getLoggedTraders().size() == 1;
         System.out.println("Test passed: " + passed);
+    }
+    
+    private static void testLoginWithExistingMessages() {
+        System.out.println("\nRunning testLoginWithExistingMessages...");
+        StockExchange exchange = new StockExchange();
+        Brokerage brokerage = new Brokerage(exchange);
+        
+        brokerage.addUser("trader1", "pass123");
+        Trader trader = brokerage.getTraders().get("trader1");
+        trader.receiveMessage("You have existing message");
+        
+        int result = brokerage.login("trader1", "pass123");
+        
+        System.out.println("Expected return: 0");
+        System.out.println("Actual return: " + result);
+        System.out.println("Expected logged traders size: 1");
+        System.out.println("Actual logged traders size: " + brokerage.getLoggedTraders().size());
+        System.out.println("Expected: Trader already had messages");
+        System.out.println("Actual: " + trader.hasMessages());
+        System.out.println("Test passed: " + (result == 0 && brokerage.getLoggedTraders().size() == 1));
     }
     
     private static void testLoginUserNotFound() {
@@ -265,5 +288,25 @@ public class MyTests_Brokerage {
         boolean passed = brokerage.getTraders().size() == 3 && 
                         brokerage.getLoggedTraders().size() == 2;
         System.out.println("Test passed: " + passed);
+    }
+
+    private static void testBrokerageToString() {
+        System.out.println("\nRunning testBrokerageToString...");
+        StockExchange exchange = new StockExchange();
+        Brokerage brokerage = new Brokerage(exchange);
+        
+        String str = brokerage.toString();
+        System.out.println("Brokerage toString: " + str);
+        System.out.println("Contains class name: " + str.contains("Brokerage"));
+    }
+
+    private static void testGetExchange() {
+        System.out.println("\nRunning testGetExchange...");
+        StockExchange exchange = new StockExchange();
+        Brokerage brokerage = new Brokerage(exchange);
+        
+        StockExchange retrieved = brokerage.getExchange();
+        System.out.println("Retrieved exchange equals original: " + (retrieved == exchange));
+        System.out.println("Test passed: " + (retrieved == exchange));
     }
 }
